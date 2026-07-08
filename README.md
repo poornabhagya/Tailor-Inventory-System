@@ -10,7 +10,7 @@ The architecture is explicitly designed to balance maximum data security, strict
 
 Below is the concrete logical and network mapping for the production environment on AWS. It showcases the boundary separation between public web access, isolated internal docker runtimes, and secured backend storage subnets.
 
-![AWS Cloud Architecture Diagram](./docs/project1_cloud_archi_diagram.drawio.png)
+![AWS Cloud Architecture Diagram](./docs/project1_cloud_archi_diagram.png)
 
 ---
 
