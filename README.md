@@ -6,7 +6,7 @@ The architecture is explicitly designed to balance maximum data security, strict
 
 ---
 
-## 🗺️ System Architecture Diagram
+##  System Architecture Diagram
 
 Below is the concrete logical and network mapping for the production environment on AWS. It showcases the boundary separation between public web access, isolated internal docker runtimes, and secured backend storage subnets.
 
@@ -14,7 +14,7 @@ Below is the concrete logical and network mapping for the production environment
 
 ---
 
-## 🛠️ Deep Architectural Breakdown & Mechanics
+##  Deep Architectural Breakdown & Mechanics
 
 ### 1. Zero-Cost Compute & Smart Compilation Model
 *   **The Hardware Constraint:** The production host is deployed on an **AWS EC2 Free-Tier instance (t2.micro/t3.micro)** with only 1GB of RAM.
@@ -38,7 +38,7 @@ Below is the concrete logical and network mapping for the production environment
 
 ---
 
-## 🗂️ Core Infrastructure Specifications
+##  Core Infrastructure Specifications
 
 ### Technology Matrix & Software Inventory
 | Layer | Core Selection | Target Version | Operational Notes |
@@ -58,7 +58,7 @@ Below is the concrete logical and network mapping for the production environment
 
 ---
 
-## 📖 Operational Runbook Status
+##  Operational Runbook Status
 
 Detailed installation execution, memory configuration strategies (such as local host **Swap Space Optimization** to handle memory spikes gracefully), and step-by-step infrastructure bootstrap flows can be reviewed inside the specialized deployment files:
 
