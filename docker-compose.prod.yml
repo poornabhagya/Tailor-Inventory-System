@@ -1,42 +1,17 @@
 version: '3.8'
 
 services:
-  # 1. PostgreSQL Database Service
-  db:
-    image: postgres:16-alpine
-    container_name: tailor-postgres-db
-    restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-tailor_admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-TailorSecurePass2026}
-      POSTGRES_DB: ${POSTGRES_DB:-tailor_inventory_db}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - tailor-network
-    expose:
-      - '5432'
-
-  # 2. Next.js + Payload CMS Web Application Service
   web:
     image: tailor-inventory-app:latest
     container_name: tailor-nextjs-app
     restart: always
     ports:
       - '3001:3000'
-    depends_on:
-      - db
     env_file:
       - .env
     networks:
       - tailor-network
 
-# 🌐 Isolated Internal Network
 networks:
   tailor-network:
     driver: bridge
-
-# 💾 Persistent Storage Volume for DB
-volumes:
-  postgres_data:
-    driver: local
