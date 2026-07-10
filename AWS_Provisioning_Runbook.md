@@ -1,21 +1,24 @@
-PHASE 3: AWS Production Provisioning & Configuration
-Technical Implementation Runbook & Troubleshooting Manual
-Project Name: Tailor Inventory System
-Lead DevOps Engineer: Poorna Bhagya
-Status: 100% Completed
+# PHASE 3: AWS Production Provisioning & Configuration
+## Technical Implementation Runbook & Troubleshooting Manual
+**Project Name:** Tailor Inventory System
+**Lead DevOps Engineer:** Poorna Bhagya
+**Status:** 100% Completed
 
-Section 1: Local Environment Preparation & SSH Security
-Step 1.1: Local Key File Path Selection
+---
+
+## Section 1: Local Environment Preparation & SSH Security
+
+### Step 1.1: Local Key File Path Selection
 Before connecting from the local Windows machine to the AWS EC2 server, navigate to the folder where the private key file (.pem file) is located using PowerShell.
 
-PowerShell
+```powershell
 cd ~\Downloads
 Troubleshooting: WARNING: UNPROTECTED PRIVATE KEY FILE!
 Issue: The SSH connection is rejected due to broad permissions when running the command: ssh -i tailor-inventory-key.pem ubuntu@54.254.235.155.
 
 Cause: Unlike Linux, Windows permits other local users and groups (such as CodexSandboxUsers) to read files inside the Downloads folder by default. The OpenSSH system enforces strict security policies and rejects authentication using private keys that are accessible to other users.
 
-Solution (PoLP Principle): Disable inheritance on the file via Windows PowerShell and grant exclusive full control permissions only to the current user (Porna Bhagya).
+Solution (PoLP Principle): Disable inheritance on the file via Windows PowerShell and grant exclusive full control permissions only to the current user (Poorna Bhagya).
 
 Remediation Commands (Line-by-Line):
 
@@ -91,9 +94,14 @@ Verification
 Analyze storage and memory metrics to confirm successful optimization:
 
 Bash
-df -h   # Use% should decrease to around 70%, verifying 2GB+ of free space.
-free -h  # The Swap row must display an allocation metric of 2.0Gi.
+df -h
+(Use% should decrease to around 70%, verifying 2GB+ of free space).
 
+Bash
+free -h
+(The Swap row must display an allocation metric of 2.0Gi).
+
+Plaintext
 # --- [Swap Commands Deep Architecture Explanation] ---
 # * fallocate: Dynamically reserves a dedicated continuous storage block on the physical disk.
 # * chmod 600: Restricts data access exclusively to the root account to prevent system users or processes from extracting sensitive RAM runtime state data like secrets or tokens.
@@ -123,7 +131,7 @@ Install the official AWS CLI tools to manage secure deployment pulls from privat
 
 Bash
 sudo apt install unzip -y && \
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+curl "[https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip](https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip)" -o "awscliv2.zip" && \
 unzip awscliv2.zip && \
 sudo ./aws/install && \
 rm -rf awscliv2.zip aws
@@ -228,7 +236,7 @@ DATABASE_URL=postgresql://tailor_admin:TailorSecurePass2026@db:5432/tailor_inven
 
 # Payload CMS / Next.js Production Secrets
 PAYLOAD_SECRET=SuperSecretPayloadKey2026ChangeMe
-NEXT_PUBLIC_SERVER_URL=http://54.254.235.155
+NEXT_PUBLIC_SERVER_URL=[http://54.254.235.155](http://54.254.235.155)
 
 # Amazon S3 Decoupled Media Storage Settings
 S3_BUCKET=tailor-inventory-assets
@@ -260,7 +268,7 @@ server {
     client_max_body_size 50M;
 
     location / {
-        proxy_pass http://127.0.0.1:3001;
+        proxy_pass [http://127.0.0.1:3001](http://127.0.0.1:3001);
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -277,7 +285,7 @@ Nginx architecture conventions dictate that virtual site rules recorded within s
 Bash
 # Instantiate symlink binding
 sudo ln -s /etc/nginx/sites-available/tailor-inventory /etc/nginx/sites-enabled/
-
+Bash
 # Verify structural health of the Nginx declarative code rules
 sudo nginx -t
 Expected Output:
@@ -294,7 +302,7 @@ server_name: Filters and captures browser requests directed at this public addre
 
 client_max_body_size 50M: Increases file payload ingestion limits to 50MB to accommodate image uploads inside Payload CMS (the default value is 1MB, which rejects asset uploads exceeding that volume).
 
-proxy_pass [http://127.0.0.1:3001](http://127.0.0.1:3001): The Core Reverse Proxy Magic. Rewrites and passes incoming requests down to internal localhost port 3001, where the application container runs.
+proxy_pass http://127.0.0.1:3001: The Core Reverse Proxy Magic. Rewrites and passes incoming requests down to internal localhost port 3001, where the application container runs.
 
 Upgrade $http_upgrade & Connection 'upgrade': Stabilizes socket upgrade hooks to protect real-time application synchronization behaviors and maintain hot reloading protocols.
 
@@ -310,7 +318,7 @@ sudo systemctl status nginx
 (Verify the runtime tracker is highlighted in green displaying an active (running) state. Press q to exit).
 
 Real-world Browser Test:
-Input the active public tracking address ([http://54.254.235.155](http://54.254.235.155)) inside your local web browser.
+Input the active public tracking address (http://54.254.235.155) inside your local web browser.
 
 Observed Result: The viewport must render a 502 Bad Gateway system page flag.
 
