@@ -45,6 +45,9 @@
 | Management / Client | IAM User        | Project Manager / Client / Auditors | ReadOnlyAccess + Billing (Strictly for viewing infrastructure status and billing invoices. No configuration modifications allowed). |
 | GitHub-CI-CD        | IAM Role / User | GitHub Actions Pipeline             | Strictly restricted to Amazon ECR (Push) and EC2 (Deploy) via secure secrets.                                                       |
 | EC2-App-Role        | IAM Role        | EC2 Server Instance                 | Restricted to AWS S3 Read/Write (For user uploads and media assets).                                                                |
+| tailor-s3-user      | IAM User        | Next.js App / Payload S3 Client     | AmazonS3FullAccess (Programmatic keys injected inside Docker runtime to bypass internal IMDSv2 network isolation restrictions).     |
+
+**EC2-App-Role:** Restricted to AWS ECR Read-Only for pulling production docker images via instance profile metadata.
 
 ### 6. Network Architecture and Firewall Security (VPC and Security Groups)
 

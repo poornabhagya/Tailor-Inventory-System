@@ -108,6 +108,8 @@ A tailoring rental and inventory management system built as a unified Next.js we
 | `NEXT_PUBLIC_SERVER_URL` | Yes      | `https://tailor-inventory.com`             | No      | Base application entry URL used for internal and external API fetching. |
 | `NODE_ENV`               | Yes      | `development` \| `production`              | No      | Toggles performance optimizations inside the framework build.           |
 | `S3_BUCKET`              | No       | `tailor-inventory-assets`                  | No      | Defines target global AWS bucket name for binary object uploads.        |
+| `S3_ACCESS_KEY_ID`       | Yes      | `AKIAIOSFODNN7EXAMPLE`                     | Yes     | IAM User access key enabling programmatic storage bucket access.        |
+| `S3_SECRET_ACCESS_KEY`   | Yes      | `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY` | Yes     | IAM User secret key used by Payload CMS S3 client plugin layer.         |
 
 ---
 
@@ -181,6 +183,9 @@ A tailoring rental and inventory management system built as a unified Next.js we
 - **Docker Base Image:** `node:22.17.0-alpine` (Lightweight, security-hardened minimal OS layer running Node.js v22)
 - **Application Runtime Port:** Parameterized to run securely via proxy configurations mapped to port `3001`.
 
+> **Runtime Storage Credential Ingress Note (Network Isolation Patch):**
+> Due to Docker internal bridge network isolation blocking containerized access to the AWS EC2 Instance Profile Metadata layer (IMDSv2), S3 storage bucket connectivity is explicitly authenticated via programmatic IAM User credentials (`tailor-s3-user`) possessing `AmazonS3FullAccess`. These keys are safely injected as inline environment variables during container runtime initialization via the Docker CLI layer.
+
 ### C. Required Pre-installed Host Tools
 
 - **Docker Engine & Docker Compose:** Container abstraction layer running runtime app deployments.
@@ -197,6 +202,7 @@ A tailoring rental and inventory management system built as a unified Next.js we
 
 ## 13. Revision History
 
-| Version    | Date       | Author        | Description of Changes                                                                                                                                                                                                     |
-| :--------- | :--------- | :------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **v1.0.0** | 2026-07-04 | Poorna Bhagya | Initial release and full compilation of the DevOps Master Runbook (Sections 1-12). Validated with local code analysis (`payload-types.ts`), repository dependency checks, and successful production build test executions. |
+| Version    | Date       | Author        | Description of Changes                                                                                                                                                                                                                                                                                          |
+| :--------- | :--------- | :------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **v1.0.0** | 2026-07-04 | Poorna Bhagya | Initial release and full compilation of the DevOps Master Runbook (Sections 1-12). Validated with local code analysis (`payload-types.ts`), repository dependency checks, and successful production build test executions.                                                                                      |
+| **v1.1.0** | 2026-07-11 | Poorna Bhagya | Executed Step 4.4 End-to-End Functional Verification. Patched S3 upload authorization bug by upgrading container runtime to utilize explicit programmatic IAM User keys due to Docker-to-IMDSv2 network isolation constraints. Successfully verified RDS persistence and live S3 object uploads (`images.jpg`). |
